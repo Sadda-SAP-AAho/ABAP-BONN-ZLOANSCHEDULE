@@ -1,0 +1,184 @@
+@Metadata.layer: #CORE
+@UI.headerInfo.title.type: #STANDARD
+@UI.headerInfo.title.value: 'CompCode'
+@UI.headerInfo.description.type: #STANDARD
+@UI.headerInfo.description.value: 'CompCode'
+annotate view ZC_LOANSCHEDULE with
+{
+  @EndUserText.label: 'Company'
+  @UI.facet: [ {
+    label: 'General Information', 
+    id: 'GeneralInfo', 
+    purpose: #STANDARD, 
+    position: 10 , 
+    type: #IDENTIFICATION_REFERENCE
+  } ]
+  
+   @UI.lineItem: [ {
+    position: 10 , 
+      label: 'Generate Data',
+      type: #FOR_ACTION,
+      dataAction: 'generateData',
+      invocationGrouping: #CHANGE_SET,
+    importance: #HIGH
+  },
+  {
+    position: 10 , 
+    label: 'Company'
+  }  ]
+  
+  @UI.identification: [ {
+    position: 10 , 
+    label: 'Company'
+  } ]
+  @UI.selectionField: [ {
+    position: 10 
+  } ]
+  @Consumption.valueHelpDefinition: [{ entity: { name: 'I_CompanyCodeSTDVH', element: 'CompanyCode' } }]
+  CompCode;
+  
+  @EndUserText.label: 'Loan No'
+  @UI.identification: [ {
+    position: 20 , 
+    label: 'Loan No'
+  } ]
+  @UI.lineItem: [ {
+    position: 20 , 
+    label: 'Loan No'
+  } ]
+  @UI.selectionField: [ {
+    position: 20 
+  } ]
+  LoanNo;
+  
+  @EndUserText.label: 'Month/Year'
+  @UI.identification: [ {
+    position: 30 , 
+    label: 'Month/Year'
+  } ]
+  @UI.lineItem: [ {
+    position: 30 , 
+    label: 'Month/Year'
+  } ]
+  @UI.selectionField: [ {
+    position: 30 
+  } ]
+  MonthYear;
+  
+  @EndUserText.label: 'Employee Id'
+  @UI.identification: [ {
+    position: 40 , 
+    label: 'Employee Id'
+  } ]
+  @UI.lineItem: [ {
+    position: 40 , 
+    label: 'Employee Id'
+  } ]
+  
+    @Consumption.valueHelpDefinition: [{ entity: { name: 'ZR_EMPLOYEEVH', element: 'Employee' },
+  additionalBinding: [{ localElement: 'EmployeeName',    element: 'Name',   usage:#FILTER_AND_RESULT }]
+   }]
+  EmployeeId;
+  
+  @EndUserText.label: 'Employee Name'
+  @UI.identification: [ {
+    position: 50 , 
+    label: 'Employee Name'
+  } ]
+  @UI.lineItem: [ {
+    position: 50 , 
+    label: 'Employee Name'
+  } ]
+  EmployeeName;
+  
+  @EndUserText.label: 'Loan Type'
+  @UI.identification: [ {
+    position: 60 , 
+    label: 'Loan Type'
+  } ]
+  @UI.lineItem: [ {
+    position: 60 , 
+    label: 'Loan Type'
+  } ]
+   @Consumption.valueHelpDefinition: [{ entity: { name: 'ZR_LOANTYPE', element: 'Value' } }]
+  LoanType;
+  
+  @EndUserText.label: 'Installment Amount'
+  @UI.identification: [ {
+    position: 70 , 
+    label: 'Installment Amount'
+  } ]
+  @UI.lineItem: [ {
+    position: 70 , 
+    label: 'Installment Amount'
+  } ]
+  InstallmentAmount;
+  
+  @EndUserText.label: 'Approved Amount'
+  @UI.identification: [ {
+    position: 80 , 
+    label: 'Approved Amount'
+  } ]
+  @UI.lineItem: [ {
+    position: 80 , 
+    label: 'Approved Amount'
+  } ]
+  ApprovedAmount;
+  
+  @EndUserText.label: 'Approved'
+  @UI.identification: [ {
+    position: 90 , 
+    label: 'Approved'
+  } ]
+  @UI.lineItem: [ {
+    position: 90 , 
+    label: 'Approved'
+  } ]
+  Approved;
+  
+  @EndUserText.label: 'Approved By'
+  @UI.identification: [ {
+    position: 100 ,
+    label: 'Approved By'
+  } ]
+  @UI.lineItem: [ {
+    position: 100 ,
+    label: 'Approved By'
+  } ]
+  ApprovedBy;
+  
+  @UI.identification: [ {
+    position: 110 
+  } ]
+  @UI.lineItem: [ {
+    position: 110 
+  } ]
+  CreatedBy;
+  
+  @UI.identification: [ {
+    position: 120 
+  } ]
+  @UI.lineItem: [ {
+    position: 120 
+  } ]
+  CreatedAt;
+  
+  @UI.identification: [ {
+    position: 130 
+  } ]
+  @UI.lineItem: [ {
+    position: 130 
+  } ]
+  LastChangedBy;
+  
+  @UI.identification: [ {
+    position: 140 
+  } ]
+  @UI.lineItem: [ {
+    position: 140 
+  } ]
+  LastChangedAt;
+  
+  @UI.hidden: true  
+  LocalLastChangedAt;
+}

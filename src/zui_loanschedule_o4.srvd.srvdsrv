@@ -1,0 +1,4 @@
+@EndUserText.label: 'Loan Schedule V2 Service Definition'
+define service ZUI_LOANSCHEDULE_O4 {
+  expose ZC_LOANSCHEDULE as LoanSchedule;
+}

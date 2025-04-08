@@ -1,0 +1,34 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Loan Schedule",
+    "originalLanguage": "en",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "generalInformation": {
+    "appType": "ui5",
+    "catalogId": "SAP_TC_UI5_REPO_UIAD"
+  },
+  "ui5AppDetails": {
+    "appId": "zloanschedule"
+  },
+  "navigation": {
+    "targetMappingId": "UI5R_BF39F83D2092C628BA9D519B3AF582D7B0BF0842_TM",
+    "semanticObject": "ZLoanSchedule",
+    "action": "Maintain",
+    "desktop": true,
+    "tablet": true,
+    "phone": true
+  },
+  "tiles": [
+    {
+      "id": "UI5R_BF39F83D2092C628BA9D519B3AF582D7B0BF0842_AL",
+      "tileType": "static",
+      "isDefault": true,
+      "standard": {
+        "title": "Loan Schedule",
+        "subtitle": "zloanschedule"
+      }
+    }
+  ]
+}

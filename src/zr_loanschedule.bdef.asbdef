@@ -1,0 +1,54 @@
+managed implementation in class ZBP_R_LOANSCHEDULE unique;
+strict ( 2 ) ;
+define behavior for ZR_LOANSCHEDULE alias ZrLoanschedule
+persistent table ZLOANSCHEDULE
+etag master LastChangedAt
+lock master
+authorization master ( global, instance )
+
+{
+
+  field ( readonly )
+   CreatedBy,
+   CreatedAt,
+   LastChangedBy,
+   LastChangedAt,
+   LocalLastChangedAt;
+
+  field ( readonly : update )
+   LoanType,
+   EmployeeId,
+   EmployeeName,
+   InstallmentAmount,
+   CompCode,
+   LoanNo,
+   MonthYear;
+
+
+  create;
+  update;
+  delete;
+  static action generateData parameter ZI_LOANSCHEDULEPARAM result [1] $self;
+  determination approved on modify { field Approved;}
+
+
+
+  mapping for ZLOANSCHEDULE
+  {
+    CompCode = comp_code;
+    LoanNo = loan_no;
+    MonthYear = month_year;
+    EmployeeId = employee_id;
+    EmployeeName = employee_name;
+    LoanType = loan_type;
+    InstallmentAmount = installment_amount;
+    ApprovedAmount = approved_amount;
+    Approved = approved;
+    ApprovedBy = approved_by;
+    CreatedBy = created_by;
+    CreatedAt = created_at;
+    LastChangedBy = last_changed_by;
+    LastChangedAt = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
