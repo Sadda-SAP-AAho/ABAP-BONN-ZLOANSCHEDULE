@@ -28,6 +28,8 @@ authorization master ( global, instance )
   create;
   update;
   delete;
+
+  action Approve;
   static action generateData parameter ZI_LOANSCHEDULEPARAM result [1] $self;
   determination approved on modify { field Approved;}
 

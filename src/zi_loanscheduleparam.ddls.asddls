@@ -4,7 +4,7 @@ define abstract entity ZI_LOANSCHEDULEPARAM
      @Consumption.valueHelpDefinition: [{ entity: { name: 'I_CompanyCodeSTDVH', element: 'CompanyCode' } }]
      @EndUserText.label: 'Company Code'
     comp_code : bukrs;
-    @EndUserText.label: 'Month/Year'
-    month_year : abap.char(7);
+    @EndUserText.label: 'Date'
+    month_year : abap.dats;
     
 }

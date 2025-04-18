@@ -1,8 +1,8 @@
 @Metadata.layer: #CORE
 @UI.headerInfo.title.type: #STANDARD
-@UI.headerInfo.title.value: 'CompCode'
+@UI.headerInfo.title.value: 'LoanNo'
 @UI.headerInfo.description.type: #STANDARD
-@UI.headerInfo.description.value: 'CompCode'
+@UI.headerInfo.description.value: 'MonthYear'
 annotate view ZC_LOANSCHEDULE with
 {
   @EndUserText.label: 'Company'
@@ -19,6 +19,14 @@ annotate view ZC_LOANSCHEDULE with
       label: 'Generate Data',
       type: #FOR_ACTION,
       dataAction: 'generateData',
+      invocationGrouping: #CHANGE_SET,
+    importance: #HIGH
+  },
+  {
+    position: 20 , 
+      label: 'Approve',
+      type: #FOR_ACTION,
+      dataAction: 'Approve',
       invocationGrouping: #CHANGE_SET,
     importance: #HIGH
   },

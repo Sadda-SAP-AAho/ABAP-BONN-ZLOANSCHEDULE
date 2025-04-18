@@ -16,6 +16,10 @@ CLASS LHC_ZR_LOANSCHEDULE DEFINITION INHERITING FROM CL_ABAP_BEHAVIOR_HANDLER.
       METHODS approved FOR DETERMINE ON MODIFY
       IMPORTING keys FOR ZrLoanschedule~approved.
 
+
+      METHODS Approve FOR MODIFY
+      IMPORTING keys FOR ACTION ZrLoanschedule~Approve.
+
 ENDCLASS.
 
 CLASS LHC_ZR_LOANSCHEDULE IMPLEMENTATION.
@@ -59,17 +63,45 @@ CLASS LHC_ZR_LOANSCHEDULE IMPLEMENTATION.
 
    METHOD generateData.
     DATA : lt_irn TYPE TABLE OF zr_loanschedule.
-    DATA : wa_irn TYPE zr_loanschedule.
+    DATA : wa_irn TYPE zr_loanschedule,
+           lv_month       TYPE n LENGTH 2,
+           lv_year        TYPE n LENGTH 4.
+
 
     READ TABLE keys INTO DATA(ls_key) INDEX 1.
     DATA(Company) = ls_key-%param-comp_code.
-    DATA(monthYear) = ls_key-%param-month_year.
+    DATA(curDate) = ls_key-%param-month_year.
 
-    SPLIT monthYear AT '/' INTO DATA(lv_month) DATA(lv_year).
-    DATA(sysDate) = cl_abap_context_info=>get_system_date( ).
-    DATA(lv_date) = sysDate+6(2).
+    DATA(lv_filterdate) = curDate+0(4) && curDate+4(2) && '01'.
 
-    CONCATENATE lv_year lv_month lv_date INTO DATA(lv_filterdate).
+    DATA(monthyear) = curDate+4(2) && '/' &&  curDate+0(4) .
+
+    lv_year  = curDate(4).
+    lv_month = curDate+4(2).
+
+    IF lv_month = 01.
+      lv_month = 12.
+      lv_year  = lv_year - 1.
+    ELSE.
+      lv_month = lv_month - 1.
+    ENDIF.
+
+    DATA(lv_lastMonth) = lv_month && '/' && lv_year.
+
+    SELECT SINGLE FROM zr_loanschedule
+    FIELDS MonthYear
+    WHERE MonthYear = @lv_lastMonth AND CompCode = @Company AND Approved = @abap_false
+    INTO @DATA(prevSchedule).
+
+    IF prevSchedule IS NOT INITIAL.
+        APPEND VALUE #( %cid = ls_key-%cid
+                        %msg = new_message_with_text(
+                          severity = if_abap_behv_message=>severity-error
+                          text = 'Previous Month Schedule is not Approved.' )
+                        ) TO reported-zrloanschedule.
+        RETURN.
+    ENDIF.
+
 
     SELECT FROM zr_loanmaster
     FIELDS BalanceAmount, EmployeeId, EmployeeName, CompCode, LoanNo, LoanAmount, LoanType, TotalAmount, EMICount
@@ -86,6 +118,7 @@ CLASS LHC_ZR_LOANSCHEDULE IMPLEMENTATION.
         INTO @DATA(curSchedule).
 
         IF curSchedule IS NOT INITIAL.
+            CLEAR curSchedule.
             CONTINUE.
         ENDIF.
 
@@ -99,11 +132,15 @@ CLASS LHC_ZR_LOANSCHEDULE IMPLEMENTATION.
 
         DATA(cid) = getCID( ).
 
+        IF installAmt GT wa_loan-BalanceAmount.
+            installAmt = wa_loan-BalanceAmount.
+        ENDIF.
+
 
         MODIFY ENTITIES OF zr_loanschedule IN LOCAL MODE
             ENTITY ZrLoanschedule
             CREATE
-            FIELDS ( CompCode LoanNo LoanType EmployeeId EmployeeName MonthYear InstallmentAmount )
+            FIELDS ( CompCode LoanNo LoanType EmployeeId EmployeeName MonthYear InstallmentAmount ApprovedAmount )
             WITH VALUE #(
               ( %cid = cid
                 CompCode = wa_loan-CompCode
@@ -112,6 +149,7 @@ CLASS LHC_ZR_LOANSCHEDULE IMPLEMENTATION.
                 EmployeeId = wa_loan-EmployeeId
                 EmployeeName = wa_loan-EmployeeName
                 InstallmentAmount = installAmt
+                ApprovedAmount = installAmt
                 MonthYear = monthyear
                 lastchangedat = lv_timestamp
                 )
@@ -171,6 +209,33 @@ CLASS LHC_ZR_LOANSCHEDULE IMPLEMENTATION.
 
     ENDLOOP.
 
+  ENDMETHOD.
+
+  METHOD Approve.
+
+    READ ENTITIES OF zr_loanschedule IN LOCAL MODE
+        ENTITY ZrLoanschedule
+        FIELDS ( ApprovedAmount LoanNo CompCode )
+        WITH CORRESPONDING #( keys )
+        RESULT DATA(lv_loanschedule).
+
+    LOOP AT lv_loanschedule INTO DATA(wa_loanschedule).
+        MODIFY ENTITIES OF zr_loanschedule IN LOCAL MODE
+            ENTITY ZrLoanschedule
+            UPDATE FIELDS ( Approved )
+            WITH VALUE #( (
+                %tky       = wa_loanschedule-%tky
+                Approved = abap_true
+              ) )
+            FAILED DATA(lt_failed)
+            REPORTED DATA(lt_reported).
+    ENDLOOP.
+
+    APPEND VALUE #( %msg = new_message_with_text(
+                      severity = if_abap_behv_message=>severity-success
+                      text = 'Approved.' )
+                      ) TO reported-zrloanschedule.
+                      RETURN.
   ENDMETHOD.
 
   METHOD getCID.
